@@ -1,0 +1,108 @@
+<script src="../tinytest.js"></script>
+<script src="adder.js"></script>
+<script>
+
+// Function signature:
+  // isPrototypeOf(prototypeObj, object)
+
+// Callback parameters:
+  // prototypeObj     The object that is being checked to see if it is the prototype of 'object'
+  // object           The object whose prototype chain will be searched.
+
+  /* ==========================================================================
+     #EXAMPLE OBJECTS FOR TESTING
+     ========================================================================== */
+  var canine = {
+    bark: function () {
+      console.log('bark');
+    }
+  };
+  var dog = Object.create(canine);
+  dog.fetch = function () {
+    console.log('fetch');
+  };
+  var cat = {
+    meow: function () {
+      console.log('meow');
+    }
+  }
+  var myDog = Object.create(dog);
+  var empty = Object.create(null);
+  var tree = null;
+
+  /* ==========================================================================
+     #FUNCTION
+     ========================================================================== */
+
+function isPrototypeOf (prototypeObj, object) {
+  var protoOfObject = Object.getPrototypeOf(object);
+
+  // Check if any issues with arguments.
+  if (object === null || object === undefined || prototypeObj === null || prototypeObj === undefined) {
+    throw new TypeError('TypeError: One of the arguements is undefined or null');
+  }
+  if (protoOfObject === null || protoOfObject === undefined) {
+    return false;
+  }
+
+  // Check if the object's closest prototype is prototypeObj
+  if (Object.getPrototypeOf(object) === prototypeObj) {
+    return true;
+  }
+
+  // Check Object.prototype is the next step up in the object's prototype chain through recursion.
+  if (Object.getPrototypeOf(object) !== Object.prototype) {
+    var prototypeOneStepUp = Object.getPrototypeOf(object);
+    isPrototypeOf(prototypeObj, prototypeOneStepUp);
+    return true;
+  }
+
+  // If there is no match across the entire prototype chain, return false
+  else {
+    return false;
+  }
+};
+
+
+/* ==========================================================================
+   #TESTS
+   ========================================================================== */
+
+tests({
+  'It should return "true" if the "prototypeObj" is a prototype of "object".': function () {
+    var prototypeTruthChecker = isPrototypeOf(canine, dog);
+    eq(prototypeTruthChecker, true);
+  },
+
+  'It should return "false" if prototypeObj Object.getPrototypeOf(object) is null': function () {
+    var prototypeTruthChecker = isPrototypeOf(dog, empty);
+    eq(prototypeTruthChecker, false);
+  },
+
+  'It should return "true" when checking whether the core prototype "Object" is in the "object"s prototype chain.': function () {
+    var prototypeTruthChecker = isPrototypeOf(Object.prototype, myDog);
+    eq(prototypeTruthChecker, true);
+  },
+
+  'It should return "false" if prototypeObj is not in the objects prototype chain': function () {
+    var prototypeTruthChecker = isPrototypeOf(canine, cat);
+    eq(prototypeTruthChecker, false);
+  },
+
+  'It should work for any number of prototype links.': function () {
+    var prototypeTruthChecker = isPrototypeOf(canine, myDog);
+    eq(prototypeTruthChecker, true);
+  },
+
+  'It should throw a TypeError if one of the arguements is undefined or null.': function () {
+    var isTypeError = false;
+    try {
+      isPrototypeOf(canine, tree);
+    } catch (e) {
+      isTypeError = (e instanceof TypeError);
+    }
+    eq(isTypeError, true);
+  }
+
+});
+</script>
