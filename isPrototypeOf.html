@@ -25,6 +25,7 @@
       console.log('meow');
     }
   }
+  var mitten = Object.create(cat);
   var myDog = Object.create(dog);
   var empty = Object.create(null);
   var tree = null;
@@ -52,8 +53,8 @@ function isPrototypeOf (prototypeObj, object) {
   // Check Object.prototype is the next step up in the object's prototype chain through recursion.
   if (Object.getPrototypeOf(object) !== Object.prototype) {
     var prototypeOneStepUp = Object.getPrototypeOf(object);
-    isPrototypeOf(prototypeObj, prototypeOneStepUp);
-    return true;
+    var comparisonResult = isPrototypeOf(prototypeObj, prototypeOneStepUp);
+    return comparisonResult;
   }
 
   // If there is no match across the entire prototype chain, return false
