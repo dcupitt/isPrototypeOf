@@ -91,7 +91,10 @@ tests({
 
   'It should work for any number of prototype links.': function () {
     var prototypeTruthChecker = isPrototypeOf(canine, myDog);
+    var prototypeTruthChecker2 = isPrototypeOf(canine, mitten);
     eq(prototypeTruthChecker, true);
+    eq(prototypeTruthChecker2, false);
+
   },
 
   'It should throw a TypeError if one of the arguements is undefined or null.': function () {
